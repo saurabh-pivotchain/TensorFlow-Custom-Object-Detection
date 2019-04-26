@@ -1,113 +1,52 @@
 # TensorFlow-Custom-Object-Detection
 Object Detection using TensorFlow-Object-Detection_API
 
-Object detection allows for the recognition, detection of multiple objects within an image.
-It provides us a much better understanding of an image as a whole as opposed to just visual recognition.
-
-Some real word applications of object detection include : self-driving car, tracking objects, face detection, etc.
-<br/><br/>
-![orignal image](https://github.com/niranjangavade5/TensorFlow-Custom-Object-Detection/blob/master/test.jpg)        ![pictorial result](https://github.com/niranjangavade5/TensorFlow-Custom-Object-Detection/blob/master/pictorial_result.JPG)
-![textual result](https://github.com/niranjangavade5/TensorFlow-Custom-Object-Detection/blob/master/textual_result.JPG)
-<br/><br/><br/><br/>
 ## **Installation & Requirements:**
 <br/><br/>
 1. First things first:
-> Download tensorflow/models repository from this [link](https://github.com/tensorflow/models).
-<br/><br/>
-2. Create new folder named TensorflowObjDet in `C:\`.
-<br/><br/>
-3. Extract downloaded `tensorflow/model` repository in this TensorflowObjDet folder.
-<br/><br/>
-4. Rename the models-master folder as models.
-<br/><br/>
-5. Download [this](https://github.com/niranjangavade5/TensorFlow-Custom-Object-Detection) repository & extract all files directly in 
-`C:\TensorflowObjDet\models\research\object-detection`
-<br/><br/>
-6. You should atleast have _python 3.0 or above_ version & _Anaconda_ installed on your system.<br/>
-**Required packages:**
 ```
-protobuf
-jupyter
-opencv-python
-matplotlib
-pillow
-pandas
-numpy
-lxml
-```
-> **Note:** _Before installing these packages you have to create a virtual enviroment for Tensorflow._
-<br/><br/>
-7. Open Anaconda Command prompt
-<br/><br/>
-8. Create virtual enviroment by executing :
-```
-conda create -n TensorflowVirtEnv
+git clone https://github.com/pivotchain/POI-face-recognition/tree/Training_Codes/tensorflow_api
 ```
 <br/><br/>
-9. Activate created enviroment:
-```
-activate TensorflowVirtEnv
-```
-<br/><br/><br/>
-10. Install required TensorFlow version in this enviroment by executing one of below commands:
-- CPU version: 
-```
-pip install tensorflow
-```
-- GPU version:
-```
-pip install tensorflow-gpu
-```
->**Note:**_If having any problem installing tensorflow, follow steps on this [link](https://www.tensorflow.org/install/)._
+2. cd POI-face-recognition && git checkout Training_Codes && cd tensorflow_api
 <br/><br/>
-11. Run below command in same Command prompt to install all required packages:
+3. Create virtual enviroment by executing :
 ```
-conda install -r reqs.txt
+conda create -n TensorflowTrainingEnv python==3.6
 ```
 <br/><br/>
-12. Now change working directory by executing following command:
+4. Activate created enviroment:
 ```
-cd C:\TensorflowObjDet\models\research\object-detection\
-```
-<br/><br/>
-13. Compile the Protobuf libraries by executing following command:
-```
-protoc protos/*.proto --python_out=.
+source activate TensorflowTrainingEnv
 ```
 <br/><br/>
-14. Set enviroment path by executing following command:
+
+5. Run below command in same Command prompt to install all required packages:
 ```
-set PATH=%PATH%;C:\TensorflowObjDet\models;C:\TensorflowObjDet\models\research;C:\TensorflowObjDet\models\research\slim
-```
->**Note:** _This must be executed every time you open terminal._
-<br/><br/>
-15. Change directory by executing following command:
-```
-cd ..
+pip install -r requirement.txt
 ```
 <br/><br/>
-16. Execute following commands one by one:
+
+6.When running locally, slim directories should be appended to PYTHONPATH. This can be done by running the following command:
 ```
-python setup.py build
-python setup.py install
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 ```
+>Note: This command needs to run from every new terminal you start. If you wish to avoid running this manually, you can add it as a new line to the end of your ~/.bashrc file, replacing `pwd` with the absolute path of tensorflow_api on your system._
 <br/><br/>
-17. Change directory by executing following command:
+
+7.You can test that you have correctly installed the Tensorflow Object Detection API by running the following command:
 ```
-cd object-detection
+python object_detection/builders/model_builder_test.py
 ```
-<br/><br/>
-18. Delete temporary file `tp_delete_it.txt` in directories `train`,`test` & `inference_graph` 
-<br/><br/><br/>
+
 ## **Setting train/test data & Creating `.csv` files**
 <br/><br/>
-1. Place train `.jpg` & their repective `.xml` files(labels) in train folder
-> **Note :**_You can download train & test data from [here](https://www.kaggle.com/c/5408/download-all)._
+1. Place train `.jpg` & their repective `.xml` files(labels) in train folder in images folder.
 <br/><br/>
-2. Place test `.jpg` & their repective `.xml` files(labels) in test folder
+2. Place test `.jpg` & their repective `.xml` files(labels) in test folder images folder.
 > **Note :**_For creating .xml files(labels) you can use [this](https://github.com/tzutalin/labelImg) great open source image labelling tool. Repositories README.md file has information on installing & using it._
 <br/><br/>
-4. Run the following command to create `train.csv` & `test.csv` files
+4. Run the following command to create `train.csv` & `test.csv` files.These file will be created under images folder.
 ```
 python parse_xml_to_csv.py
 ```
@@ -119,12 +58,12 @@ python parse_xml_to_csv.py
 <br/><br/>
 2. Run the following command to create `train.record`
 ```
-python create_tf_record.py --csv_input=train_labels.csv --image_dir=train --output_path=train.record
+python create_tf_record.py --csv_input=./images/train_labels.csv --image_dir=./images/train --output_path=./images/train.record
 ```
 <br/><br/>
 3. Run the following command to create `test.record`
 ```
-python create_tf_record.py --csv_input=test_labels.csv --image_dir=test --output_path=test.record
+python create_tf_record.py --csv_input=./images/test_labels.csv --image_dir=./images/test --output_path=./images/test.record
 ```
 <br/><br/><br/>
 ## **Configuring label map**
@@ -137,7 +76,7 @@ python create_tf_record.py --csv_input=test_labels.csv --image_dir=test --output
 <br/><br/>
 1. Go to [model zoo](https://github.com/tensorflow/models/blob/99256cf470df6af16808eb0e49a8354d2f9beae2/research/object_detection/g3doc/detection_model_zoo.md) & download `faster_rcnn_inception_v2_coco` (or any other model of your choice).
 <br/><br/>
-2. Extract theis folder to `C:\TensorflowObjDet\models\research\object-detection\` this folder
+2. Extract theis folder to `./base_models` this folder
 <br/><br/><br/>
 ## **Configuring object detection training pipeline**
 <br/><br/>
@@ -147,30 +86,30 @@ python create_tf_record.py --csv_input=test_labels.csv --image_dir=test --output
 <br/><br/>
 3. Open this file & edit the following:
     - num_classes : to the number of classes you want to detect
-    - fine_tune_checkpoint : set path to `C:/TensorflowModels/models/research/object_detection/faster_rcnn_inception_v2_coco_2018_01_28/model.ckpt`(or to model.ckpt of any base model that you use)
-    - input_path(train_input_reader) : in train_input_reader block set input_path to `C:/TensorflowModels/models/research/object_detection/train.record` file
-    - label_map_path(train_input_reader) : in train_input_reader block set path to `C:/TensorflowModels/models/research/object_detection/training/labelmap.pbtxt`
+    - fine_tune_checkpoint : set path to  model.ckpt of any base model that you use.
+    - input_path(train_input_reader) : in train_input_reader block set input_path to `train.record` file generated in previous step.
+    - label_map_path(train_input_reader) : in train_input_reader block set path to `labelmap.pbtxt` file created in above step.
     - num_examples : set the number to number of test images you will be using
-    - input_path(eval_input_reader) : in eval_input_reader block set input_path to `C:/TensorflowModels/models/research/object_detection/test.record` file
-    - label_map_path(eval_input_reader) : in eval_input_reader block set path to `C:/TensorflowModels/models/research/object_detection/training/labelmap.pbtxt`
-    > **Note:**_Use forward slash(/) while setting these paths_
+    - input_path(eval_input_reader) : in eval_input_reader block set input_path to `test.record` file generated in previous step.
+    - label_map_path(eval_input_reader) : in eval_input_reader block set path to `labelmap.pbtxt` file created in above step.
+    - num_examples : set the number to number of test images you will be using.`
 <br/><br/><br/>
 ## **Training**
 <br/><br/>
-1. Execute following command while in `C:/TensorflowModels/models/research/object_detection` directory
+1. Execute following command while in `./tensorflow_api` directory
 ```
 python train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_pets.config
 
 ```
 > **Note:**_Initialization takes upto 30 secs before actual training starts_
 <br/><br/>
-2. Wait until loss is less than 0.05 consistently (can take upto hours, differs from model to model)
+2. Wait until loss is decreasing consistently (can take upto hours, differs from model to model)
 <br/><br/>
 3. Once satisfied with loss value, press `control + c` to stop training
 <br/><br/><br/>
 ## **Using Tensorboard(for graph visualization)**
 <br/><br/>
-1. In a new terminal navigate to `C:/TensorflowModels/models/research/object_detection` directory
+1. In a new terminal navigate to `./tensorflow_api` directory
 <br/><br/>
 2. Execute following command:
 ```
@@ -191,33 +130,3 @@ python export_inference_graph.py --input_type image_tensor --pipeline_config_pat
 <br/><br/>
 2. This creates `frozen_inference_graph.pb` file in `inference_graph` directory
 <br/><br/><br/>
-## **Testing trained model**
-<br/><br/>
-> **Note :**_test_model.py file can be used on images only, but you can use your own script to test your model on video or webcam streams_
-<br/><br/>
-1. Open test_model.py file in `C:/TensorflowModels/models/research/object_detection` directory & change value of `NUM_CLASSES` on line number 40 to match the number of classes you have & save the file.
-<br/><br/>
-2. Using `test_model.py` you can get results in two formats, textual format or pictorial format or both.
-    * textual format : Gives you a brief description of classes detected on the provided image in terminal itself.
-    * pictorial format : Presents the provided image with bounding boxes arround objects detected.
-<br/><br/>
-3. Execute following command while in `C:/TensorflowModels/models/research/object_detection` directory for getting `pictorial results`.
-```
-python test_model.py C:\TensorflowModels\models\research\object_detection\test.jpg --with_image
-```
-![pictorial result](https://github.com/niranjangavade5/TensorFlow-Custom-Object-Detection/blob/master/pictorial_result.JPG)
-<br/><br/>
-4. Execute following command while in `C:/TensorflowModels/models/research/object_detection` directory for getting `textual results`.
-```
-python test_model.py C:\TensorflowModels\models\research\object_detection\test.jpg --textual
-```
-![textual result](https://github.com/niranjangavade5/TensorFlow-Custom-Object-Detection/blob/master/textual_result.JPG)
-<br/><br/>
-5. Execute following command while in `C:/TensorflowModels/models/research/object_detection` directory for getting `textual & pictorial results`.
-```
-python test_model.py C:\TensorflowModels\models\research\object_detection\test.jpg --textual --with_image
-```
-> **Note :**_`--textual flag` should be provided before `--with_image` flag._
-<br/><br/>
-> **Note :**_Path to the image file has to be modified in above commands depending on where the image file is._
-<br/><br/>
